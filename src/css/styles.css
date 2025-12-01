@@ -100,7 +100,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
-  margin: 0 auto;
+  margin: 0 auto 32px auto;
 }
 .gallery-item {
   flex-basis: calc((100% - 48px) / 3);
@@ -154,4 +154,21 @@ body .sl-wrapper .sl-navigation button {
   width: 24px;
   height: 24px;
   color: #fff;
+}
+.load-btn {
+  display: block;
+  margin: 0 auto;
+  border: none;
+  border-radius: 8px;
+padding: 8px 16px;
+width: 125px;
+background-color: #4e75ff;
+font-weight: 500;
+font-size: 16px;
+line-height: 1.5;
+letter-spacing: 0.04em;
+color: #fff;
+&.is-hidden {
+  display: none;
+}
 }

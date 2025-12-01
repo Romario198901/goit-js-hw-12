@@ -5,9 +5,10 @@ const simplelightbox = new SimpleLightbox('.gallery-link', {
   captionPosition: 'bottom',
   captionDelay: 500,
 });
-const refs = {
+export const refs = {
   gallery: document.querySelector('.js-gallery'),
   loader: document.querySelector('.loader'),
+  loadMoreBtn: document.querySelector('.load-btn'),
 };
 function createCard({
   webformatURL,
@@ -44,15 +45,21 @@ function createCard({
 }
 export function createGallery(images) {
   const markup = images.map(createCard).join('');
-refs.gallery.innerHTML = markup;
+  refs.gallery.insertAdjacentHTML('beforeend', markup);
   simplelightbox.refresh();
 }
 export function clearGallery() {
-refs.gallery.innerHTML = '';
+  refs.gallery.innerHTML = '';
 }
 export function showLoader() {
   refs.loader.classList.remove('is-hidden');
 }
 export function hideLoader() {
   refs.loader.classList.add('is-hidden');
+}
+export function showLoadMoreButton() {
+  refs.loadMoreBtn.classList.remove('is-hidden');
+}
+export function hideLoadMoreButton() {
+  refs.loadMoreBtn.classList.add('is-hidden');
 }
