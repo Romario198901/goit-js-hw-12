@@ -58,8 +58,7 @@ async function handleFormSubmit(e) {
     } else {
       hideLoadMoreButton();
     }
-  }
-   catch (error) {
+  } catch (error) {
     iziToast.error({
       title: '❌',
       titleColor: '#fafafb',
@@ -79,7 +78,7 @@ refs.loadMoreBtn.addEventListener('click', handleLoadMoreBtnClicked);
 async function handleLoadMoreBtnClicked() {
   showLoader();
   try {
-    const totalPages = Math.ceil(total/ ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
     if (currentPage + 1 >= totalPages) {
       iziToast.warning({
         title: '❌',
@@ -89,21 +88,21 @@ async function handleLoadMoreBtnClicked() {
         backgroundColor: '#ef4040',
         position: 'bottomRight',
       });
-  hideLoadMoreButton();
+      hideLoadMoreButton();
       return;
     }
-      const nextPage = currentPage + 1;
+    const nextPage = currentPage + 1;
     const { hits } = await getImagesByQuery(currentQuery, nextPage);
     if (!hits || hits.length === 0) {
       iziToast.warning({
         title: '❌',
         titleColor: '#fafafb',
-        message: "No more images found.",
+        message: 'No more images found.',
         messageColor: '#fafafb',
         backgroundColor: '#ef4040',
         position: 'bottomRight',
       });
-       hideLoadMoreButton();
+      hideLoadMoreButton();
       return;
     }
     currentPage = nextPage;
@@ -114,22 +113,21 @@ async function handleLoadMoreBtnClicked() {
       top: cardHeight * 2,
       behavior: 'smooth',
     });
-   if (currentPage >= totalPages) { 
-    hideLoadMoreButton();
-    }  
-    else {
-    showLoadMoreButton();
+    if (currentPage >= totalPages) {
+      hideLoadMoreButton();
+    } else {
+      showLoadMoreButton();
     }
   } catch (error) {
     iziToast.error({
       title: '❌',
       titleColor: '#fafafb',
-      message: "Sorry, something went wrong!!!. Please try again!",
+      message: 'Sorry, something went wrong!!!. Please try again!',
       messageColor: '#fafafb',
       backgroundColor: '#ef4040',
       position: 'topRight',
     });
-     hideLoadMoreButton();
+    hideLoadMoreButton();
   } finally {
     hideLoader();
   }
