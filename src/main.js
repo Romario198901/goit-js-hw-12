@@ -10,10 +10,11 @@ import {
   showLoadMoreButton,
 } from './js/render-functions';
 const searchForm = document.querySelector('form');
-let currentPage;
+let currentPage = 1;
 let currentQuery = '';
-let total = 0;
+let totalHits = 0;
 const ITEMS_PER_PAGE = 15;
+hideLoadMoreButton();
 searchForm.addEventListener('submit', handleFormSubmit);
 async function handleFormSubmit(e) {
   e.preventDefault();
@@ -31,16 +32,17 @@ async function handleFormSubmit(e) {
     return;
   }
   clearGallery();
+   hideLoadMoreButton();
   showLoader();
   currentPage = 1;
   currentQuery = query;
   try {
-    const { hits, totalHits } = await getImagesByQuery(
+    const { hits, totalHits: total } = await getImagesByQuery(
       currentQuery,
       currentPage
     );
-    total = totalHits;
-    const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+    totalHits = total;
+    const totalPages = Math.ceil(totalHits / ITEMS_PER_PAGE);
     if (!hits || hits.length === 0) {
       iziToast.error({
         title: '❌',
@@ -70,16 +72,16 @@ async function handleFormSubmit(e) {
     console.error(error);
   } finally {
     hideLoader();
-    e.target.reset();
   }
+  e.target.reset();
 }
-clearGallery();
 refs.loadMoreBtn.addEventListener('click', handleLoadMoreBtnClicked);
 async function handleLoadMoreBtnClicked() {
   showLoader();
   try {
-    const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
-    if (currentPage + 1 >= totalPages) {
+    const totalPages = Math.ceil(totalHits / ITEMS_PER_PAGE);
+      const nextPage = currentPage + 1;
+    if (nextPage > totalPages) {
       iziToast.warning({
         title: '❌',
         titleColor: '#fafafb',
@@ -89,9 +91,9 @@ async function handleLoadMoreBtnClicked() {
         position: 'bottomRight',
       });
       hideLoadMoreButton();
+      hideLoader();
       return;
     }
-    const nextPage = currentPage + 1;
     const { hits } = await getImagesByQuery(currentQuery, nextPage);
     if (!hits || hits.length === 0) {
       iziToast.warning({
@@ -113,11 +115,9 @@ async function handleLoadMoreBtnClicked() {
       top: cardHeight * 2,
       behavior: 'smooth',
     });
-    if (currentPage >= totalPages) {
+    if (currentPage === totalPages) {
       hideLoadMoreButton();
-    } else {
-      showLoadMoreButton();
-    }
+    } 
   } catch (error) {
     iziToast.error({
       title: '❌',
